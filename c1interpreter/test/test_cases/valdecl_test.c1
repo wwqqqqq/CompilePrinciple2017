@@ -1,0 +1,7 @@
+void main()
+{
+	int a,b,c=1,d;
+    int e[]={1,2},g[5];
+	int f[2]={3,4};
+}
+

@@ -1,0 +1,6 @@
+void main(){
+	int ar[]={1,2,3,4};
+	int i,j;
+	i=ar[2];
+	j=i+1;
+}

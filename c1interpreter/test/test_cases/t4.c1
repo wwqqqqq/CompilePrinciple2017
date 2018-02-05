@@ -1,0 +1,8 @@
+const int a = 1*4;
+void main()
+{
+	const int b = 1+5;
+	int c = 2*6;
+	c = b*4;
+	c = 1+4;
+}

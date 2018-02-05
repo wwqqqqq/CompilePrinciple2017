@@ -1,0 +1,13 @@
+CPU：Intel(R) Core(TM) i7-4600U CPU @ 2.10GHz 2.69 GHz
+内存大小： 5.8 GiB (虚拟机)
+操作系统：ubuntu 16.04 LTS
+cmake目标：make
+cmake build type：Debug
+编译线程数： 4
+编译耗时： 120 min
+内存占用峰值： 29 GB
+遇到的问题及如何解决： 
+/usr/bin/ar: ../../libLLVMScalarOpts.a: 设备上没有空间
+原因及解决方法： 原虚拟机上硬盘空间太小，重新开一个存储空间较大的虚拟机来进行编译
+collect2: fatal error: ld terminated with signal 9 [Killed]
+解决方法： 停止编译后，改用make -j1继续编译

@@ -1,0 +1,8 @@
+void main(){
+	const int if1=1;
+	int ifx=0x235ab;
+	int else3=0XABCDEF;
+	int int_=if1;
+	while(int_>0)
+		int_=int_-0x1;
+}

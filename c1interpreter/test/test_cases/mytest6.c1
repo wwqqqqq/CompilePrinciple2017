@@ -1,0 +1,7 @@
+int i=0;
+void main()
+{
+	int a[5]={1,2,3,4,42};
+	output_var=a[a[a[a[a[i]]]]];
+	output();
+}
