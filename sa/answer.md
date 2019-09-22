@@ -12,9 +12,11 @@ CFG
 2. **Checker 在分析程序时需要记录程序状态，这些状态一般保存在哪里？**   
 每当分析引擎发现一个新的语句时，它指示所有的checker监听该语句，让它们可以报告错误或修改语句。Checkers按照预先定义的顺序被调用，在ExplodedGraph中加入调用checker的调用链。故checker分析程序时记录的程序状态，一般被保存在ExplodedGraph中。
 3. **简要解释分析器在分析下面程序片段时的过程，在过程中产生了哪些symbolic values? 它们的关系是什么？**    
-`int x = 3, y = 4;`  
-`int *p = &x;`  
-`int z = *(p + 1);`  
+```C
+int x = 3, y = 4;
+int *p = &x;
+int z = *(p + 1);
+```
     1. 第一行，产生了4个Sval，分别是concrete number 2和3，以及x和y的memory location。x的memory location与concrete number 2绑定，y的memory location与concrete number 3绑定。
     1. 第二行，产生1个新的Sval，即指针p的memory location，x在内存中的地址被存在p的地址中。
     1. 第三行，产生了3个SVal，计算p+1，作为了一个新的symbolic value，对它所指向的内存地址进行访问，得到一个symbolic value，即`*(p+1)`，最后计算左值，即z的memory location，将`*(p+1)`的值存入。
@@ -72,27 +74,25 @@ checkPostCall函数
 重复关闭文件；在打开文件前尚未关闭该文件。  
 局限性：无法在其他对文件进行操作时识别，只能识别fopen, fclose是否出现错误。
 对如下程序进行编译：  
-`#include <stdio.h>`  
-`FILE *open(char *file)`  
-`{`  
-`return fopen(file, "r");`  
-`}`  
-`void f1(FILE *f)`  
-`{`  
-`fclose(f);`  
-`}`  
-`void f2(FILE *f)`  
-`{`  
-`fclose(f);`  
-`} `  
-`int main()`  
-`{`  
-`FILE *f = open("foo");`  
-`f1(f);`  
-`fputs(f,"abcd");`
-`f2(f);`  
-`return 0;`  
-`}`    
+```C
+#include <stdio.h>
+FILE *open(char *file) {
+    return fopen(file, "r");
+}
+void f1(FILE *f){
+    fclose(f);
+}
+void f2(FILE *f) {
+    fclose(f);
+}
+int main() {
+    FILE *f = open("foo");
+    f1(f);
+    fputs(f,"abcd");
+    f2(f);
+    return 0;
+}
+```
 编译选项为：`clang --analyze -Xanalyzer -analyzer-checker=alpha.unix.SimpleStream dblclose.c`  
 此时会报`warning: Closing a previously closed file stream`  
 即checker对重复关闭文件进行报错warning，却不会对f1函数已经关闭后，再次对它进行fputs操作的错误操作，进行报错或warning。
