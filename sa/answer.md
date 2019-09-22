@@ -1,12 +1,12 @@
-#Clang Static Analyzer
+# Clang Static Analyzer
 
-##3.1   
+## 3.1   
 **简要说明 test.c 、 AST.svg 、 CFG.svg 和 ExplodedGraph.svg 之间的联系与区别**  
 1. AST是由C语言程序test.c生成的抽象语法树(abstract syntax tree)。是analyzer-checker对程序进行的语法分析。
 1. CFG, Control Flow Graph, 是程序test.c编译生成的控制流图。每一个结点代表一个基本块，代表了程序执行过程中，遍历各基本块的逻辑/顺序。CFG是编译器优化和静态分析的重要工具。
 1. 在flow-sensitive analysis中，若把不同点(ProgramPoint, State)对看成不同的结点，即，即使程序点相同，状态不同的结点也看成不同的结点。这样以来，分析完后产生的图的结点比原先的CFG的结点要多，这个新的图即为Exploded Graph。在CFG图中，结点是基本块；在Exploded Graph中，各结点则是[ProgramPoint, State]这样的状态对。Explodede Graph是用来表示执行中所探测到的所有可能的路径。
 
-##3.2
+## 3.2
 1. **Checker 对于程序的分析主要在 AST 上还是在 CFG 上进行？**   
 CFG  
 2. **Checker 在分析程序时需要记录程序状态，这些状态一般保存在哪里？**   
@@ -19,7 +19,7 @@ CFG
     1. 第二行，产生1个新的Sval，即指针p的memory location，x在内存中的地址被存在p的地址中。
     1. 第三行，产生了3个SVal，计算p+1，作为了一个新的symbolic value，对它所指向的内存地址进行访问，得到一个symbolic value，即`*(p+1)`，最后计算左值，即z的memory location，将`*(p+1)`的值存入。
 
-##3.3
+## 3.3
 1. **LLVM 大量使用了 C++11/14的智能指针，请简要描述几种智能指针的特点、使用场合，如有疑问也可以记录在报告中.**  
     - **`std::unique_ptr`** is a smart pointer that owns and manages another object through a pointer and disposes of that object when the `unique_ptr` goes out of scope.  
 当`unique_ptr`被销毁，或由于`operator=`或`reset()`操作指向其他对象时，`unique_ptr`原来所指的对象被删除，即`unqie_ptr`独占所指向的对象；当`unique_ptr`不指向任何对象时，被称为*empty*。  
@@ -48,7 +48,7 @@ CFG
 4. **你有时会在cpp文件中看到匿名命名空间的使用，这是出于什么考虑？**    
 C++中的匿名命名空间类似于C语言中的`static`关键字，却拥有更加强大的功能。它指示编译器该命名空间仅在当前的翻译单元中可见，允许了更加积极的优化，并消除了发生符号名冲突的可能。
 
-##3.4  
+## 3.4  
 SimpleStreamChecker: a checker for proper use of fopen/fclose APIs.  
 - If a file has been closed with fclose, it should not be accessed again. Accessing a closed file results in undefined behavior.  
 - If a file was opened with fopen, it must be closed with fclose before the execution ends. Failing to do so results in a resource leak.  
@@ -97,7 +97,7 @@ checkPostCall函数
 此时会报`warning: Closing a previously closed file stream`  
 即checker对重复关闭文件进行报错warning，却不会对f1函数已经关闭后，再次对它进行fputs操作的错误操作，进行报错或warning。
 
-##3.5
+## 3.5
 1. **增加一个checker需要增加哪些文件？需要对哪些文件进行修改？**  
     1. 增加checker implementation file: `lib/StaticAnalyzer/Checker/CheckerName.cpp`。
     1. 修改`include/clang/StaticAnalyzer/Checkers/Checkers.td`。
