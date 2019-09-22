@@ -17,7 +17,8 @@ MultFirst value: 55[=1+((2\*3)\*4)+(5\*6)]
 PlusFirst value: 486[=(1+2)\*3\*(4+5)\*6]  
 * 给出ANTLR不支持的左递归文法的例子并尝试分析原因  
 参见UnsupportedLeftRecursive.g4:  
-`grammar UnsupportedLeftRecursive;
+```
+grammar UnsupportedLeftRecursive;
 
 Identifier: [a-zA-Z_] [a-zA-Z_0-9]*;
 Number: [1-9][0-9]*;
@@ -28,6 +29,9 @@ WhiteSpace: [ \t\n\r]+ -> skip;
 expr:
 	expr Multiply expr  # Mult
 	| expr Plus expr  # Plus
-	;`  
+	;
+```
+
 这种情况下，由于expr的所有产生式均为左递归文法，此时antlr4 UnsupportedLeftRecursive.g4会产生如下错误提示：  
-error(147): UnsupportedLeftRecursive.g4:9:0: left recursive rule expr must contain an alternative which is not left recursive  
+
+```error(147): UnsupportedLeftRecursive.g4:9:0: left recursive rule expr must contain an alternative which is not left recursive.```
