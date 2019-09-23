@@ -1,6 +1,6 @@
-#lab2   预热实验
-***
-##遇到的问题及解决方法   
+# lab2  预热实验
+
+## 遇到的问题及解决方法   
 1. `lli fib.ll`指令报错：  
 `error: instruction expected to be numbered "%0"`    
 原因：fib函数中使用的临时变量编号从%1开始，而没有使用%0。  
@@ -21,7 +21,7 @@
     3. 将常数（如0，1，2，10）转换为Value *类型的指针  
    使用`Constant::get(Type::getInt32Ty(context),0,true)`会提示`llvm::Constant`中找不到get函数，将`Constant`改为`ConstantInt`即可解决。
 
-##分析与设计
+## 分析与设计
 1. 实验1：编写`fib.ll`
 所使用的LLVM IR语法：
     * Conditional brach: `br i1 <cond>, label <iftrue>, label <iffalse>`
@@ -43,6 +43,7 @@
         * fib函数由5个基本块构成，label分别为entry, IfZero, IfNotZero, IfOne, Otherwise。main函数由4个基本块构成，label分别为entry, cmp, loop, exit。对每个基本块，使用BasicBlock::Create函数构造一个对应的基本块。
         * 每个基本块的开头调用`builder.SetInsertPoint()`函数，结尾调用`builder.ClearInsertionPoint()`函数。
     1. 对于基本块中的每种LLVM IR语句，对应的对builder进行操作的函数分别为：
+    
          LLVM IR  | C++ Function
         ----------|-------------
         `br i1 <cond>, label <iftrue>, label <iffalse>`|`BranchInst *CreateCondBr(Value *Cond, BasicBlock *True, BasicBlock *False,MDNode *BranchWeights = nullptr,MDNode *Unpredictable = nullptr);`
@@ -54,6 +55,7 @@
         `<result> = sub <ty> <op1>, <op2>`|`Value *CreateSub(Value *LHS, Value *RHS, const Twine &Name = "", bool HasNUW = false, bool HasNSW = false);`
         `<result> = add <ty> <op1>, <op2>`|`Value *CreateAdd(Value *LHS, Value *RHS, const Twine &Name = "", bool HasNUW = false, bool HasNSW = false)`
         `ret <ty> <value>`|`ReturnInst *CreateRet(Value *V)`
+        
     1. 对于立即数作为操作数的语句，如`%cond1 = icmp eq i32 %n, 0`，0需要用`Value *`类型指针代替。这里使用`auto Zero = ConstantInt::get(Type::getInt32Ty(context),0,true);`，Zero即可作为`Value *`类型指针使用。
     1. fib函数中，需要取得传入的参数，这里使用`auto n = &(*func_fib->arg_begin());`，n即为传入的i32类型参数。当调用fib函数时，则用`std::vector<Value *>`类型的容器，装入待传输的参数，作为`CreateCall`函数的参数传给fib即可。
     1. 最后使用`module->print(outs(), nullptr);`来打印生成的LLVM IR程序。
