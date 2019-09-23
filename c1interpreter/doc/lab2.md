@@ -1,6 +1,6 @@
-#实验2  C1语言的LLVM IR代码生成器
+# 实验2  C1语言的LLVM IR代码生成器
 
-##遇到的错误
+## 遇到的错误
 1. visit函数怎样识别`global_def_syntax` `expr_syntax` `stmt_syntax`  
 直接使用`visit()`函数，参数为`global_def_syntax`、`expr_syntax`、`stmt_syntax`时会报错。  
 解决方法：考虑到`syntax_tree.h`中对各种结构体类型中定义的函数`virtual void accept(syntax_tree_visitor &visitor) override final;`。将`visit(expr)`改为`expr->accept(*this);`便可以正常运行。对`stmt_syntax`和`global_def_syntax`同理。
@@ -9,7 +9,7 @@
 解决方法：将它们的数据类型统一改成`ArrayType::get(Type::getInt32Ty(context),length)`，索引时解两次引用`getelementptr 0, index`。
 
 
-##分析与设计
+## 分析与设计
 1. 如何声明数组 
     * 对于全局变量，见4。
     * 对于非全局变量，与普通变量相似，同样使用`CreateAlloca`函数，不同的是全局变量的类型应该是`ArrayType`。由于C1语言只识别int32类型的一维数组，先通过`visit(array_length)`来获得数组长度length，则它的数组类型即为`ArrayType::get(Type::getInt32Ty(context),length)`。
