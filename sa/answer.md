@@ -17,9 +17,9 @@ int x = 3, y = 4;
 int *p = &x;
 int z = *(p + 1);
 ```
-    1. 第一行，产生了4个Sval，分别是concrete number 2和3，以及x和y的memory location。x的memory location与concrete number 2绑定，y的memory location与concrete number 3绑定。
-    1. 第二行，产生1个新的Sval，即指针p的memory location，x在内存中的地址被存在p的地址中。
-    1. 第三行，产生了3个SVal，计算p+1，作为了一个新的symbolic value，对它所指向的内存地址进行访问，得到一个symbolic value，即`*(p+1)`，最后计算左值，即z的memory location，将`*(p+1)`的值存入。
+ * 第一行，产生了4个Sval，分别是concrete number 2和3，以及x和y的memory location。x的memory location与concrete number 2绑定，y的memory location与concrete number 3绑定。
+ * 第二行，产生1个新的Sval，即指针p的memory location，x在内存中的地址被存在p的地址中。
+ * 第三行，产生了3个SVal，计算p+1，作为了一个新的symbolic value，对它所指向的内存地址进行访问，得到一个symbolic value，即`*(p+1)`，最后计算左值，即z的memory location，将`*(p+1)`的值存入。
 
 ## 3.3
 1. **LLVM 大量使用了 C++11/14的智能指针，请简要描述几种智能指针的特点、使用场合，如有疑问也可以记录在报告中.**  
